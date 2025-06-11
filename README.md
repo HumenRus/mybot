@@ -6,7 +6,7 @@ Installation
 
 Clone the repository:
 
-git clone https://github.com/HumenRus/kbot.git
+git clone https://github.com/HumenRus/mybot.git
 
 cd kbot
 
