@@ -3,4 +3,4 @@ format:
 	gofmt -s -w ./
 
 build:
-	go build -v -o mybot -ldflags "-X="github.com/humenrus/mybot/cmd.appVersion=${Version}
+	go build -v -o mybot -ldflags "-X="github.com/humenrus/mybot/cmd.appVersion=${VERSION}
