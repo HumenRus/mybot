@@ -1,3 +1,12 @@
-FROM busybox
-CMD ["sh", "-c", "while true; do echo -e 'HTTP/1.1 200 OK\n\nVersion: v1.0.0' | nc -vlp 8080; done"]
-EXPOSE 8080
+FROM golang:1.19 as builder
+
+WORKDIR /go/src/app
+COPY . .
+RUN make build
+
+FROM scratch
+WORKDIR /
+COPY --from=builder /go/src/app/mybot .
+COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
+
+ENTRYPOINT ["./mybot"]
