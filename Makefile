@@ -1,5 +1,8 @@
+APP=$(basename $(shell git remote get-url origin))
+REGISTRY=humenrus
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS=linux
+TARGETARCH=arm68
 format:
 	gofmt -s -w ./
 
@@ -9,8 +12,17 @@ lint:
 test:
 	go test -v
 
-build: format 
-	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o mybot -ldflags "-X="github.com/humenrus/mybot/cmd.appVersion=${VERSION}
+get:
+	go get
+
+build: format get
+	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${shell dpkg --print-architecture} go build -v -o mybot -ldflags "-X="github.com/humenrus/mybot/cmd.appVersion=${VERSION}
+
+image:
+	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+
+push:
+	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
 
 clean:
 	rm -rf mybot
